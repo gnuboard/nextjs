@@ -1,6 +1,6 @@
 # nextjs14
 
-multiple layout example
+## multiple layout example
 
 ```
 git clone https://github.com/gnuboard/nextjs.git
