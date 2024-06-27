@@ -16,7 +16,10 @@
 
 
 import React from 'react';
-import './globals.css';
+import '../globals.css';
+import { Container, Box } from '@mui/material';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export const metadata = {
   title: 'Opus',
@@ -24,11 +27,15 @@ export const metadata = {
 
 const RootLayout = ({ children }) => {
   return (
-    <html lang="ko">
-    <body>
-      {children}
-    </body>
-    </html>
+    <>
+      <Header />
+      <Container maxWidth="lg">
+        <Box my={4}>
+          <main>{children}</main>
+        </Box>
+      </Container>
+      <Footer />
+    </>
   );
 };
 

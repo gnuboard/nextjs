@@ -16,19 +16,26 @@
 
 
 import React from 'react';
-import './globals.css';
+import '../globals.css';
+import { Container, Box } from '@mui/material';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export const metadata = {
-  title: 'Opus',
+  title: '커머스',
 };
 
 const RootLayout = ({ children }) => {
   return (
-    <html lang="ko">
-    <body>
-      {children}
-    </body>
-    </html>
+    <>
+      <Header backgroundColor="#ff4081" />
+      <Container maxWidth="lg">
+        <Box my={4}>
+          <main>{children}</main>
+        </Box>
+      </Container>
+      <Footer />
+    </>
   );
 };
 
