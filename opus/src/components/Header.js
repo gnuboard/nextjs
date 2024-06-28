@@ -2,18 +2,16 @@
 "use client";
 
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemText, Tooltip, Switch } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemText, Tooltip } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Link from 'next/link';
 import { useAuth } from '@/components/AuthorContext'; 
-import { useTheme } from '@/components/ThemeContext'; // ThemeContext에서 테마 관련 훅 import
 
 const Header = ({ backgroundColor }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { accessToken, username, logout } = useAuth();
-  const { isDarkMode, toggleTheme } = useTheme(); // 테마 상태와 토글 함수 가져오기
 
   const toggleSideMenu = () => {
     setIsOpen(!isOpen);
@@ -66,8 +64,6 @@ const Header = ({ backgroundColor }) => {
             </IconButton>
           </Tooltip>
         )}
-
-        <Switch checked={isDarkMode} onChange={toggleTheme} />
 
         <IconButton
           edge="end"
