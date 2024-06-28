@@ -7,21 +7,40 @@ import {
   TextField, 
   Button, 
   Typography, 
-  Paper 
+  Paper,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/AuthorContext';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
+  const { login } = useAuth();  // useAuth hook 사용
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // 여기에 로그인 로직을 구현합니다.
-    console.log('로그인 시도:', username, password);
-    // 로그인 성공 시 홈페이지로 리다이렉트
-    // router.push('/');
+    
+    if (!username || !password) {
+      setError('사용자 이름과 비밀번호를 모두 입력해주세요.');
+      return;
+    }
+
+    try {
+      await login(username, password);
+      console.log('로그인 성공');
+      router.push('/');
+    } catch (error) {
+      console.error('로그인 에러:', error);
+      setError(error.message);
+    }
+  };
+
+  const handleCloseError = () => {
+    setError('');
   };
 
   return (
@@ -74,6 +93,11 @@ export default function Login() {
           </Box>
         </Paper>
       </Box>
+      <Snackbar open={!!error} autoHideDuration={6000} onClose={handleCloseError}>
+        <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+          {error}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }

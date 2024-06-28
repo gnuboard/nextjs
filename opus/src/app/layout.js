@@ -15,8 +15,11 @@
 // export default RootLayout;
 
 
+// "use client";
+
 import React from 'react';
 import './globals.css';
+import { AuthProvider } from '@/components/AuthorContext';
 
 export const metadata = {
   title: 'Opus',
@@ -25,9 +28,11 @@ export const metadata = {
 const RootLayout = ({ children }) => {
   return (
     <html lang="ko">
-    <body>
-      {children}
-    </body>
+      <body>
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </body>
     </html>
   );
 };
