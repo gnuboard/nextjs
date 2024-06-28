@@ -8,6 +8,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import Link from 'next/link';
 import { useAuth } from '@/components/AuthorContext'; // AuthContext에서 인증 관련 훅 import
 
+
 // Header 컴포넌트 정의, backgroundColor prop으로 배경색 설정 가능
 const Header = ({ backgroundColor = '#1976d2' }) => {
   // 사이드 메뉴 열림/닫힘 상태 관리
