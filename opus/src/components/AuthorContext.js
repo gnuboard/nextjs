@@ -1,41 +1,39 @@
+// src/components/AuthorContext.js
 "use client";
-
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(null);
+  const [username, setUsername] = useState(null);
 
-  const login = async (username, password) => {
-    const formData = new URLSearchParams();
-    formData.append('username', username);
-    formData.append('password', password);
-
-    const response = await fetch('https://g6.demo.sir.kr/api/v1/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: formData.toString(),
-    });
-
-    if (!response.ok) {
-      throw new Error('로그인에 실패했습니다.');
+  useEffect(() => {
+    // 페이지 로드 시 로컬 스토리지에서 로그인 상태를 복원
+    const savedAccessToken = localStorage.getItem('accessToken');
+    const savedUsername = localStorage.getItem('username');
+    if (savedAccessToken && savedUsername) {
+      setAccessToken(savedAccessToken);
+      setUsername(savedUsername);
     }
+  }, []);
 
-    const data = await response.json();
-    setAccessToken(data.access_token);
-    // 여기서 refresh_token을 HttpOnly 쿠키로 설정하는 API 호출을 할 수 있습니다.
+  const login = (token, user) => {
+    setAccessToken(token);
+    setUsername(user);
+    localStorage.setItem('accessToken', token);
+    localStorage.setItem('username', user);
   };
 
   const logout = () => {
     setAccessToken(null);
-    // 여기서 refresh_token 쿠키를 삭제하는 API 호출을 할 수 있습니다.
+    setUsername(null);
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('username');
   };
 
   return (
-    <AuthContext.Provider value={{ accessToken, login, logout }}>
+    <AuthContext.Provider value={{ accessToken, username, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
