@@ -2,15 +2,20 @@
 "use client";
 
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemText, Tooltip } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemText, Tooltip, Box, Popper, Paper, ClickAwayListener, Collapse } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import Link from 'next/link';
-import { useAuth } from '@/components/AuthorContext'; 
+import { useAuth } from '@/components/AuthorContext';
 
 const Header = ({ backgroundColor }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [openSubMenu, setOpenSubMenu] = useState(false);
+  const [openDrawerSubMenu, setOpenDrawerSubMenu] = useState(false);
   const { accessToken, username, logout } = useAuth();
 
   const toggleSideMenu = () => {
@@ -22,12 +27,30 @@ const Header = ({ backgroundColor }) => {
     // TODO: 로그아웃 후 추가 작업 (예: 홈페이지로 리다이렉트)
   };
 
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpenSubMenu(true);
+  };
+
+  const handleMenuClose = () => {
+    setOpenSubMenu(false);
+  };
+
+  const handleDrawerSubMenuToggle = () => {
+    setOpenDrawerSubMenu(!openDrawerSubMenu);
+  };
+
   const menuItems = [
     { text: 'About', href: '/about' },
     { text: 'Products', href: '/products' },
     { text: 'Shop', href: '/shop' },
     { text: 'FAQ', href: '/faq' },
     { text: 'Contact', href: '/contact' },
+  ];
+
+  const productSubmenuItems = [
+    { text: 'Item1', href: '/products/item/1' },
+    { text: 'Item2', href: '/products/item/2' },
   ];
 
   return (
@@ -41,11 +64,45 @@ const Header = ({ backgroundColor }) => {
           </Link>
         </Typography>
 
-        <List sx={{ display: { xs: 'none', sm: 'flex' } }}>
-          {menuItems.map((item) => (
-            <ListItem key={item.text} button component={Link} href={item.href}>
-              <ListItemText primary={item.text} />
-            </ListItem>
+        <List sx={{ display: { xs: 'none', sm: 'flex' }, position: 'relative' }}>
+          {menuItems.map((item, index) => (
+            item.text === 'Products' ? (
+              <Box key={index} onMouseEnter={handleMenuOpen} onMouseLeave={handleMenuClose} sx={{ position: 'relative' }}>
+                <ListItem button>
+                  <ListItemText primary={item.text} />
+                </ListItem>
+                <Popper
+                  open={openSubMenu}
+                  anchorEl={anchorEl}
+                  placement="bottom-start"
+                  disablePortal={false}
+                  modifiers={[
+                    {
+                      name: 'offset',
+                      options: {
+                        offset: [0, 0],
+                      },
+                    },
+                  ]}
+                >
+                  <ClickAwayListener onClickAway={handleMenuClose}>
+                    <Paper sx={{ width: 120 }}>
+                      <List>
+                        {productSubmenuItems.map((subItem) => (
+                          <ListItem button component={Link} href={subItem.href} key={subItem.text}>
+                            <ListItemText primary={subItem.text} />
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Paper>
+                  </ClickAwayListener>
+                </Popper>
+              </Box>
+            ) : (
+              <ListItem key={item.text} button component={Link} href={item.href}>
+                <ListItemText primary={item.text} />
+              </ListItem>
+            )
           ))}
         </List>
 
@@ -77,14 +134,32 @@ const Header = ({ backgroundColor }) => {
       </Toolbar>
 
       <Drawer anchor="right" open={isOpen} onClose={toggleSideMenu}>
-        <List sx={{ width: 250 }} onClick={toggleSideMenu}>
+        <List sx={{ width: 250 }}>
           {menuItems.map((item) => (
-            <ListItem key={item.text} button component={Link} href={item.href}>
-              <ListItemText primary={item.text} />
-            </ListItem>
+            item.text === 'Products' ? (
+              <div key={item.text}>
+                <ListItem button onClick={handleDrawerSubMenuToggle}>
+                  <ListItemText primary={item.text} />
+                  {openDrawerSubMenu ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+                <Collapse in={openDrawerSubMenu} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    {productSubmenuItems.map((subItem) => (
+                      <ListItem button component={Link} href={subItem.href} key={subItem.text} sx={{ pl: 4 }}>
+                        <ListItemText primary={subItem.text} />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Collapse>
+              </div>
+            ) : (
+              <ListItem key={item.text} button component={Link} href={item.href} onClick={toggleSideMenu}>
+                <ListItemText primary={item.text} />
+              </ListItem>
+            )
           ))}
           {!accessToken && (
-            <ListItem button component={Link} href="/login">
+            <ListItem button component={Link} href="/login" onClick={toggleSideMenu}>
               <ListItemText primary="Login" />
             </ListItem>
           )}
