@@ -1,19 +1,4 @@
-// import React from 'react';
-// import './globals.css';
-// import BodyLayout from './BodyLayout';
-
-// const RootLayout = ({ children }) => {
-//   return (
-//     <html lang="ko">
-//       <BodyLayout>
-//         {children}
-//       </BodyLayout>
-//     </html>
-//   );
-// };
-
-// export default RootLayout;
-
+// Code: src/app/(home)/layout.js
 
 import React from 'react';
 import '../globals.css';

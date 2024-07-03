@@ -1,16 +1,19 @@
 // src/app/(home)/page.js
 import React from 'react';
 import { Typography } from '@mui/material';
+import Latest from '@/components/Latest';
+import Board from '@/components/Board';
 
 const Home = () => {
   return (
     <div>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Welcome to My Website
-      </Typography>
-      <Typography variant="body1">
-        This is the content area.
-      </Typography>
+      {/* <Typography variant="h4" component="h1" gutterBottom>
+        src/app/(home)/page.js
+      </Typography> */}
+      <h5>
+        src/app/(home)/page.js
+      </h5>
+      <Latest bo_table="free" view_type="write" rows={5} />
     </div>
   );
 };

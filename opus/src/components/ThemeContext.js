@@ -9,14 +9,19 @@ const ThemeContext = createContext();
 export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     // 페이지 로드 시 로컬 스토리지에서 다크 모드 상태를 읽어옴
-    const savedMode = localStorage.getItem('isDarkMode');
-    return savedMode ? JSON.parse(savedMode) : false;
+    if (typeof window !== 'undefined') {
+      const savedMode = localStorage.getItem('isDarkMode');
+      return savedMode ? JSON.parse(savedMode) : false;
+    }
+    return false;
   });
 
   const toggleTheme = () => {
     setIsDarkMode((prevMode) => {
       const newMode = !prevMode;
-      localStorage.setItem('isDarkMode', JSON.stringify(newMode));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('isDarkMode', JSON.stringify(newMode));
+      }
       return newMode;
     });
   };
@@ -25,9 +30,11 @@ export const ThemeProvider = ({ children }) => {
 
   useEffect(() => {
     // 페이지 로드 시 로컬 스토리지에서 다크 모드 상태를 읽어옴
-    const savedMode = localStorage.getItem('isDarkMode');
-    if (savedMode !== null) {
-      setIsDarkMode(JSON.parse(savedMode));
+    if (typeof window !== 'undefined') {
+      const savedMode = localStorage.getItem('isDarkMode');
+      if (savedMode !== null) {
+        setIsDarkMode(JSON.parse(savedMode));
+      }
     }
   }, []);
 
