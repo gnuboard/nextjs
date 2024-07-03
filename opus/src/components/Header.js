@@ -1,8 +1,7 @@
-// src/components/Header.js
 "use client";
 
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemText, Tooltip, Box, Popper, Paper, ClickAwayListener, Collapse } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemText, Tooltip, Box, Popper, Paper, ClickAwayListener, Collapse, Grid } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -54,83 +53,85 @@ const Header = ({ backgroundColor }) => {
   ];
 
   return (
-    <AppBar position="static" sx={{ backgroundColor }}>
+    <AppBar position="static" sx={{ backgroundColor, maxWidth: '100%', width: '100%', margin: '0 auto' }}>
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          <Link href="/" passHref legacyBehavior>
-            <Typography variant="h6" component="a" sx={{ color: 'white', textDecoration: 'none' }}>
-              Logo
-            </Typography>
-          </Link>
-        </Typography>
+        <Grid container justifyContent="space-between" alignItems="center" sx={{ maxWidth: 1200, margin: '0 auto' }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Link href="/" passHref legacyBehavior>
+              <Typography variant="h6" component="a" sx={{ color: 'white', textDecoration: 'none' }}>
+                Logo
+              </Typography>
+            </Link>
+          </Typography>
 
-        <List sx={{ display: { xs: 'none', sm: 'flex' }, position: 'relative' }}>
-          {menuItems.map((item, index) => (
-            item.text === 'Products' ? (
-              <Box key={index} onMouseEnter={handleMenuOpen} onMouseLeave={handleMenuClose} sx={{ position: 'relative' }}>
-                <ListItem button>
+          <List sx={{ display: { xs: 'none', sm: 'flex' }, position: 'relative' }}>
+            {menuItems.map((item, index) => (
+              item.text === 'Products' ? (
+                <Box key={index} onMouseEnter={handleMenuOpen} onMouseLeave={handleMenuClose} sx={{ position: 'relative' }}>
+                  <ListItem button>
+                    <ListItemText primary={item.text} />
+                  </ListItem>
+                  <Popper
+                    open={openSubMenu}
+                    anchorEl={anchorEl}
+                    placement="bottom-start"
+                    disablePortal={false}
+                    modifiers={[
+                      {
+                        name: 'offset',
+                        options: {
+                          offset: [0, 0],
+                        },
+                      },
+                    ]}
+                  >
+                    <ClickAwayListener onClickAway={handleMenuClose}>
+                      <Paper sx={{ width: 120 }}>
+                        <List>
+                          {productSubmenuItems.map((subItem) => (
+                            <ListItem button component={Link} href={subItem.href} key={subItem.text}>
+                              <ListItemText primary={subItem.text} />
+                            </ListItem>
+                          ))}
+                        </List>
+                      </Paper>
+                    </ClickAwayListener>
+                  </Popper>
+                </Box>
+              ) : (
+                <ListItem key={item.text} button component={Link} href={item.href}>
                   <ListItemText primary={item.text} />
                 </ListItem>
-                <Popper
-                  open={openSubMenu}
-                  anchorEl={anchorEl}
-                  placement="bottom-start"
-                  disablePortal={false}
-                  modifiers={[
-                    {
-                      name: 'offset',
-                      options: {
-                        offset: [0, 0],
-                      },
-                    },
-                  ]}
-                >
-                  <ClickAwayListener onClickAway={handleMenuClose}>
-                    <Paper sx={{ width: 120 }}>
-                      <List>
-                        {productSubmenuItems.map((subItem) => (
-                          <ListItem button component={Link} href={subItem.href} key={subItem.text}>
-                            <ListItemText primary={subItem.text} />
-                          </ListItem>
-                        ))}
-                      </List>
-                    </Paper>
-                  </ClickAwayListener>
-                </Popper>
-              </Box>
-            ) : (
-              <ListItem key={item.text} button component={Link} href={item.href}>
-                <ListItemText primary={item.text} />
-              </ListItem>
-            )
-          ))}
-        </List>
+              )
+            ))}
+          </List>
 
-        {accessToken ? (
-          <>
-            <Tooltip title="로그아웃">
-              <IconButton color="inherit" onClick={handleLogout}>
-                <LogoutIcon />
+          {accessToken ? (
+            <>
+              <Tooltip title="로그아웃">
+                <IconButton color="inherit" onClick={handleLogout}>
+                  <LogoutIcon />
+                </IconButton>
+              </Tooltip>
+            </>
+          ) : (
+            <Tooltip title="로그인">
+              <IconButton color="inherit" component={Link} href="/login">
+                <PersonIcon />
               </IconButton>
             </Tooltip>
-          </>
-        ) : (
-          <Tooltip title="로그인">
-            <IconButton color="inherit" component={Link} href="/login">
-              <PersonIcon />
-            </IconButton>
-          </Tooltip>
-        )}
+          )}
 
-        <IconButton
-          edge="end"
-          color="inherit"
-          aria-label="menu"
-          onClick={toggleSideMenu}
-          sx={{ display: { xs: 'block', sm: 'none' } }}
-        >
-          <MenuIcon />
-        </IconButton>
+          <IconButton
+            edge="end"
+            color="inherit"
+            aria-label="menu"
+            onClick={toggleSideMenu}
+            sx={{ display: { xs: 'block', sm: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Grid>
       </Toolbar>
 
       <Drawer anchor="right" open={isOpen} onClose={toggleSideMenu}>

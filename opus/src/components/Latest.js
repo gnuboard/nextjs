@@ -3,6 +3,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Board from './Board';
+import Grid from '@mui/material/Grid';
+import ListItem from '@mui/material/ListItem';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { truncateText, formatDate } from '@/utils/commonUtils';
 
 const Latest = ({ bo_table, view_type, rows }) => {
   const [boardData, setBoardData] = useState([]);
@@ -32,25 +39,35 @@ const Latest = ({ bo_table, view_type, rows }) => {
     fetchData();
   }, [bo_table, view_type, rows]);
 
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <div>
       <h5>
-        src/components/Latest.js
-      </h5>
-      <h2>
         <Board bo_table={bo_table} />
-      </h2>
+      </h5>
       {boardData.length > 0 ? (
-        <ul>
+        <div>
           {boardData.map((board) => (
-            <li key={board.wr_id}>
-              <h3>{board.wr_subject}</h3>
-              <div dangerouslySetInnerHTML={{ __html: board.wr_content }}></div>
-              <p>작성자: {board.wr_name}</p>
-              <p>작성일: {board.wr_datetime}</p>
-            </li>
+            <React.Fragment key={board.wr_id}>
+              <ListItem alignItems="flex-start">
+                <Grid container spacing={2}>
+                  <Grid item xs={isSmallScreen ? 10 : 8}>
+                    <Typography variant="body1" component="div">
+                      {truncateText(board.wr_subject, 20)}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={isSmallScreen ? 2 : 2}>
+                    <Typography variant="body2" color="textSecondary">
+                      {formatDate(board.wr_datetime)}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </ListItem>
+            </React.Fragment>
           ))}
-        </ul>
+        </div>
       ) : (
         <p>Loading...</p>
       )}

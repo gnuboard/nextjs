@@ -1,29 +1,11 @@
-// app/(home)/(board)/board/[bo_table]/BoardWrites.js
+// app/(board)/board/[bo_table]/ListWrites.js
 'use client';
 
 import React from 'react';
 import { List, ListItem, Divider, Typography, Grid, useMediaQuery, useTheme } from '@mui/material';
-import dayjs from 'dayjs';
+import { truncateText, formatDate } from '@/utils/commonUtils';
 
-function formatDate(dateString) {
-  const date = dayjs(dateString);
-  const today = dayjs();
-
-  if (date.isSame(today, 'day')) {
-    return date.format('HH:mm:ss');
-  } else {
-    return date.format('YY-MM-DD');
-  }
-}
-
-function truncateText(text, maxLength) {
-  if (text.length <= maxLength) {
-    return text;
-  }
-  return text.slice(0, maxLength) + '...';
-}
-
-function BoardWrites({ writes }) {
+function ListWrites({ writes, board }) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down('xs'));
@@ -33,7 +15,7 @@ function BoardWrites({ writes }) {
 
   return (
     <div>
-      <Typography variant="h4" gutterBottom>{writes.board.bo_subject}</Typography>
+      <Typography variant="h4" gutterBottom>{board.bo_subject}</Typography>
       <List>
         {/* Header Row */}
         <ListItem>
@@ -59,7 +41,7 @@ function BoardWrites({ writes }) {
         </ListItem>
         <Divider component="li" />
         {/* Data Rows */}
-        {writes.writes.map((write) => (
+        {writes.map((write) => (
           <React.Fragment key={write.wr_id}>
             <ListItem alignItems="flex-start">
               <Grid container spacing={2}>
@@ -90,4 +72,4 @@ function BoardWrites({ writes }) {
   );
 }
 
-export default BoardWrites;
+export default ListWrites;

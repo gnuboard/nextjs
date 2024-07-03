@@ -1,12 +1,14 @@
-// components/Board.js
 "use client";
 
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
 
 const Board = ({ bo_table }) => {
   const [board, setBoard] = useState(null);
+  const theme = useTheme();
 
   useEffect(() => {
     const fetchBoardData = async () => {
@@ -34,9 +36,14 @@ const Board = ({ bo_table }) => {
 
   return (
     <div>
-      <h5>src/components/Board.js</h5>
-      <Link href={`/board/${bo_table}`}>
-        <h2 style={{ cursor: 'pointer' }}>{board?.bo_subject}</h2>
+      <Link href={`/board/${bo_table}`} passHref>
+        <Typography
+          variant="h6"
+          component="a"
+          sx={{ cursor: 'pointer', color: theme.palette.link.main, textDecoration: 'none', '&:hover': { color: theme.palette.link.main } }}
+        >
+          {board?.bo_subject}
+        </Typography>
       </Link>
     </div>
   );

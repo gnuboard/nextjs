@@ -1,20 +1,33 @@
-// src/components/ThemeContext.js
 "use client";
 import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
-import { lightTheme, darkTheme } from '@/themes';
 
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    // 페이지 로드 시 로컬 스토리지에서 다크 모드 상태를 읽어옴
+    // Read dark mode state from local storage on page load
     if (typeof window !== 'undefined') {
       const savedMode = localStorage.getItem('isDarkMode');
       return savedMode ? JSON.parse(savedMode) : false;
     }
     return false;
   });
+
+  const [themes, setThemes] = useState({ lightTheme: null, darkTheme: null });
+
+  const loadTheme = async () => {
+    let themeName = process.env.NEXT_PUBLIC_THEME || 'basic';
+    try {
+      const importedThemes = await import(`@/themes/${themeName}`);
+      setThemes(importedThemes);
+    } catch (error) {
+      console.error(`Failed to load theme '${themeName}', falling back to 'basic' theme. Error:`, error);
+      themeName = 'basic';
+      const importedThemes = await import(`@/themes/${themeName}`);
+      setThemes(importedThemes);
+    }
+  };
 
   const toggleTheme = () => {
     setIsDarkMode((prevMode) => {
@@ -26,10 +39,12 @@ export const ThemeProvider = ({ children }) => {
     });
   };
 
-  const theme = useMemo(() => (isDarkMode ? darkTheme : lightTheme), [isDarkMode]);
+  useEffect(() => {
+    loadTheme();
+  }, []);
 
   useEffect(() => {
-    // 페이지 로드 시 로컬 스토리지에서 다크 모드 상태를 읽어옴
+    // Read dark mode state from local storage on page load
     if (typeof window !== 'undefined') {
       const savedMode = localStorage.getItem('isDarkMode');
       if (savedMode !== null) {
@@ -37,6 +52,14 @@ export const ThemeProvider = ({ children }) => {
       }
     }
   }, []);
+
+  const theme = useMemo(() => {
+    return isDarkMode ? themes.darkTheme : themes.lightTheme;
+  }, [isDarkMode, themes]);
+
+  if (!themes.lightTheme || !themes.darkTheme) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
