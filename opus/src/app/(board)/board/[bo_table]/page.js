@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import ListWrites from './ListWrites';
 import axios from 'axios';
 import ReactPaginate from 'react-paginate';
-import './pagination.css';
 
 async function fetchListWrites(bo_table, sst, sod, sfl, stx, sca, page, per_page) {
   const url = `https://g6.demo.sir.kr/api/v1/boards/${bo_table}/writes`;
@@ -45,7 +44,6 @@ export default function ListWritesPage({ params }) {
   useEffect(() => {
     async function loadWrites() {
       const data = await fetchListWrites(bo_table, sst, sod, sfl, stx, sca, currentPage, per_page);
-      // console.log('data:', data);
       setWrites(data.writes);
       setBoard(data.board);
       setTotalRecords(data.total_records);
