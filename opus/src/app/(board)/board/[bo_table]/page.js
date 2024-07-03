@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import ListWrites from './ListWrites';
 import axios from 'axios';
 import ReactPaginate from 'react-paginate';
+import './pagination.css';
 
 async function fetchListWrites(bo_table, sst, sod, sfl, stx, sca, page, per_page) {
   const url = `https://g6.demo.sir.kr/api/v1/boards/${bo_table}/writes`;
@@ -63,7 +64,7 @@ export default function ListWritesPage({ params }) {
       <ReactPaginate
         pageCount={totalPages}
         pageRangeDisplayed={5}
-        marginPagesDisplayed={2}
+        marginPagesDisplayed={1}
         onPageChange={handlePageClick}
         containerClassName={'pagination'}
         activeClassName={'active'}
