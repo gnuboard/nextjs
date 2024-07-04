@@ -17,7 +17,7 @@ const Latest = ({ bo_table, view_type, rows }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`https://g6.demo.sir.kr/api/v1/board-new/writes/${bo_table}`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/board-new/writes/${bo_table}`, {
           params: {
             bo_table,
             view_type,

@@ -13,7 +13,7 @@ const Board = ({ bo_table }) => {
   useEffect(() => {
     const fetchBoardData = async () => {
       try {
-        const response = await axios.get(`https://g6.demo.sir.kr/api/v1/boards/${bo_table}/writes`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes`, {
           params: {
             bo_table,
           },

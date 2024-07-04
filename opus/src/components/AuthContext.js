@@ -1,4 +1,4 @@
-// src/components/AuthorContext.js
+// src/components/AuthContext.js
 "use client";
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
@@ -32,8 +32,10 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('username');
   };
 
+  const isMember = !!accessToken && !!username;
+
   return (
-    <AuthContext.Provider value={{ accessToken, username, login, logout }}>
+    <AuthContext.Provider value={{ accessToken, username, isMember, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

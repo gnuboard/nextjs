@@ -1,7 +1,7 @@
 // src/app/layout.js
 import React from 'react';
 import './globals.css';
-import { AuthProvider } from '@/components/AuthorContext';
+import { AuthProvider } from '@/components/AuthContext';
 import { ThemeProvider } from '@/components/ThemeContext';
 import GlobalStyle from '@/components/GlobalStyle';
 

@@ -1,3 +1,4 @@
+// src/app/(authentication)/login/page.js
 "use client";
 
 import React, { useState } from 'react';
@@ -12,7 +13,7 @@ import {
   Alert
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/components/AuthorContext';
+import { useAuth } from '@/components/AuthContext';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -30,7 +31,10 @@ export default function Login() {
     }
 
     try {
-      await login(username, password);
+      // Replace with actual login logic
+      // Mocking login success with a token
+      const token = 'mock-token';
+      login(token, username);
       console.log('로그인 성공');
       router.push('/');
     } catch (error) {
